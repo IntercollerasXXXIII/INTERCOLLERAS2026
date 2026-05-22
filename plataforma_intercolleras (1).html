@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Intercolleras Prom XXXIII</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Acentos sutiles "We Are 26" — usados SOLO como filos */
+    --coral:#ff5a4d;
+    --turq:#1ee0c5;
+    --purple:#9b6bff;
+    --lime:#c4f042;
+
+    --bg:#0a0a0c;
+    --bg2:#101013;
+    --panel:#141418;
+    --panel2:#1a1a1f;
+    --line:rgba(255,255,255,.07);
+    --line2:rgba(255,255,255,.13);
+    --ink:#f4f4f6;
+    --muted:#8a8a96;
+    --muted2:#54545e;
+    --gold:#d4af37;
+    --green:#1ee0c5;
+    --red:#ff5a4d;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--turq);color:#000}
+
+  /* ===== TOPBAR ===== */
+  .topbar{position:sticky;top:0;z-index:100;background:rgba(10,10,12,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+  .topbar-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:16px;padding:13px 22px}
+  .logo{display:flex;align-items:center;gap:13px;flex-shrink:0}
+  .logo-img{width:46px;height:46px;border-radius:50%;background:#000 center/cover no-repeat;box-shadow:0 0 0 1px var(--line2)}
+  .logo-text h1{font-family:'Barlow Condensed';font-weight:800;font-size:21px;letter-spacing:.04em;line-height:1;text-transform:uppercase}
+  .logo-text span{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.3em;color:var(--muted)}
+  .nav{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+  .nav button{font-family:'Manrope';font-weight:700;font-size:13px;letter-spacing:.01em;padding:9px 15px;border-radius:9px;border:none;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s}
+  .nav button:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+  .nav button.active{color:var(--ink);background:rgba(255,255,255,.08);box-shadow:inset 0 -2px 0 var(--turq)}
+
+  .container{max-width:1080px;margin:0 auto;padding:30px 22px 80px}
+  .view{display:none}
+  .view.active{display:block;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .section-head{margin-bottom:24px}
+  .section-head h2{font-family:'Barlow Condensed';font-weight:800;font-size:46px;letter-spacing:.01em;line-height:.92;text-transform:uppercase}
+  .section-head .sub{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.18em;color:var(--muted);margin-top:5px;text-transform:uppercase}
+
+  /* ===== SCOREBOARD BAR (estilo oficial FIFA 2026 - sobrio) ===== */
+  .scorebar{
+    position:relative;display:flex;align-items:stretch;
+    background:linear-gradient(180deg,#17171c,#0e0e11);
+    border-radius:13px;overflow:hidden;margin-bottom:11px;cursor:pointer;
+    border:1px solid var(--line);
+    transition:all .2s ease;
+  }
+  .scorebar:hover{border-color:var(--line2);transform:translateY(-1px)}
+  /* Filo de color en bordes superior e inferior (firma sutil) */
+  .scorebar::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--coral),var(--turq) 40%,var(--purple) 70%,var(--lime))}
+  .scorebar::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--lime),var(--purple) 30%,var(--turq) 60%,var(--coral))}
+  .sb-side{display:flex;align-items:center;gap:11px;flex:1;padding:15px 18px}
+  .sb-side.left{justify-content:flex-end}
+  .sb-side .flag{font-size:26px;line-height:1}
+  .sb-side .kit{width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 1.5px rgba(255,255,255,.18)}
+  .sb-side .abbr{font-family:'Barlow Condensed';font-weight:700;font-size:21px;letter-spacing:.04em;text-transform:uppercase}
+  .sb-side .full{font-family:'Manrope';font-weight:700;font-size:15px}
+  .sb-mid{display:flex;align-items:center;gap:2px;padding:0 4px;background:#000;position:relative}
+  .sb-num{font-family:'Barlow Condensed';font-weight:800;font-size:30px;min-width:34px;text-align:center;line-height:1}
+  .sb-logo{width:30px;height:30px;border-radius:6px;background:#000 center/contain no-repeat;margin:0 3px;flex-shrink:0;opacity:.95}
+  .sb-vs{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--muted);padding:0 14px}
+  .sb-clock{display:flex;align-items:center;padding:0 18px;background:#fff;color:#000;font-family:'JetBrains Mono';font-weight:700;font-size:13px;letter-spacing:.02em}
+  .sb-clock.pending{background:var(--panel2);color:var(--muted)}
+
+  .sb-status-row{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.12em;color:var(--muted2);text-transform:uppercase;margin:-4px 0 12px;padding-left:4px}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;border-radius:18px;overflow:hidden;padding:44px;margin-bottom:24px;background:linear-gradient(135deg,#16161b,#0c0c0f);border:1px solid var(--line2)}
+  .hero::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--turq) 40%,var(--purple) 70%,var(--lime))}
+  .hero h2{font-family:'Barlow Condensed';font-weight:800;font-size:64px;line-height:.9;letter-spacing:.01em;text-transform:uppercase;margin-bottom:12px}
+  .hero h2 .accent{color:var(--turq)}
+  .hero p{color:var(--muted);font-size:15px;max-width:520px;font-weight:500}
+  .hero-stats{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+  .hstat{background:var(--panel);border-radius:11px;padding:13px 20px;border:1px solid var(--line);position:relative;overflow:hidden}
+  .hstat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--turq))}
+  .hstat .n{font-family:'Barlow Condensed';font-weight:800;font-size:30px;line-height:1}
+  .hstat .l{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:15px;overflow:hidden}
+  .card-pad{padding:22px}
+  .card h3{font-family:'Barlow Condensed';font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:9px}
+  .card h3 .dot{width:7px;height:7px;border-radius:50%}
+
+  /* ===== TABLA ===== */
+  .table-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:15px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  .standings thead th{font-family:'Manrope';font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:15px 9px;text-align:center;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line2)}
+  .standings thead th.team-col{text-align:left;padding-left:22px}
+  .standings tbody td{padding:13px 9px;text-align:center;border-bottom:1px solid var(--line)}
+  .standings tbody tr:hover{background:rgba(255,255,255,.025)}
+  .standings .pos{font-family:'Barlow Condensed';font-weight:700;font-size:18px;color:var(--muted);width:42px;position:relative}
+  .standings tbody tr:nth-child(-n+4) .pos{color:var(--turq)}
+  .standings tbody tr:nth-child(-n+4) .pos::before{content:'';position:absolute;left:0;top:22%;height:56%;width:2px;background:var(--turq)}
+  .standings .team-cell{display:flex;align-items:center;gap:13px;text-align:left;padding-left:12px;cursor:pointer}
+  .standings .team-cell .flag{font-size:23px}
+  .standings .team-cell .name{font-family:'Manrope';font-weight:700;font-size:15px}
+  .standings .team-cell:hover .name{color:var(--turq)}
+  .standings .pts{font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:var(--gold)}
+  .standings td.gd-pos{color:var(--green);font-weight:700}
+  .standings td.gd-neg{color:var(--red);font-weight:700}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:.06em;color:var(--muted)}
+  .legend b{color:var(--ink)}
+
+  /* ===== FIXTURE ===== */
+  .fecha-group{margin-bottom:28px}
+  .fecha-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .fecha-head .ft{font-family:'Barlow Condensed';font-weight:800;font-size:24px;letter-spacing:.03em;text-transform:uppercase}
+  .fecha-head .badge{font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.08em;text-transform:uppercase}
+  .badge-live{background:var(--turq);color:#000}
+  .badge-pend{background:var(--panel2);color:var(--muted);border:1px solid var(--line2)}
+  .day-sub{font-family:'Manrope';font-weight:700;font-size:13px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+  .day-sub::before{content:'';width:4px;height:14px;background:var(--turq);border-radius:2px}
+
+  /* ===== EQUIPOS ===== */
+  .teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+  .team-card{position:relative;cursor:pointer;border-radius:14px;overflow:hidden;padding:22px 18px;background:var(--panel);border:1px solid var(--line);transition:all .2s}
+  .team-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tc)}
+  .team-card:hover{transform:translateY(-3px);border-color:var(--line2);background:var(--panel2)}
+  .team-card .flag{font-size:50px;line-height:1}
+  .team-card .name{font-family:'Barlow Condensed';font-weight:800;font-size:23px;letter-spacing:.02em;text-transform:uppercase;margin-top:10px;line-height:.95}
+  .team-card .cap{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.08em;color:var(--muted);margin-top:5px}
+  .team-card .count{margin-top:11px;font-family:'Manrope';font-weight:700;font-size:12px;color:var(--muted)}
+
+  /* ===== JUGADORES / MVP ===== */
+  .mvp-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+  .mvp-tabs button{font-family:'Manrope';font-weight:700;font-size:13px;padding:10px 20px;border-radius:9px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+  .mvp-tabs button.active{background:var(--ink);color:#000;border-color:var(--ink)}
+  .mvp-list{display:flex;flex-direction:column;gap:11px}
+  .mvp-row{
+    position:relative;display:flex;align-items:center;gap:18px;
+    background:linear-gradient(180deg,#17171c,#0e0e11);border:1px solid var(--line);border-radius:13px;
+    padding:18px 22px;overflow:hidden;
+  }
+  .mvp-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),#8a6d1f)}
+  .mvp-row .mvp-match-info{flex:1;min-width:0}
+  .mvp-row .mm-label{font-family:'JetBrains Mono';font-size:9px;letter-spacing:.12em;color:var(--muted2);text-transform:uppercase;margin-bottom:7px}
+  .mvp-row .mm-teams{font-family:'Barlow Condensed';font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .mvp-row .mm-teams .sc{color:var(--gold)}
+  .mvp-row .mm-teams .vs{color:var(--muted2);font-size:14px}
+  .mvp-divider{width:1px;align-self:stretch;background:var(--line2);margin:0 4px}
+  .mvp-player{display:flex;align-items:center;gap:15px;min-width:0}
+  .mvp-player .num{font-family:'Barlow Condensed';font-weight:800;font-size:40px;color:var(--tc);line-height:.85;filter:brightness(1.5);flex-shrink:0}
+  .mvp-player .pinfo{min-width:0}
+  .mvp-player .star{font-family:'JetBrains Mono';font-size:8px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:2px}
+  .mvp-player .nick{font-family:'Barlow Condensed';font-weight:800;font-size:22px;letter-spacing:.02em;text-transform:uppercase;line-height:1;white-space:nowrap}
+  .mvp-player .full{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mvp-player .tm{font-family:'Manrope';font-weight:600;font-size:11px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:5px}
+  .mvp-empty{text-align:center;color:var(--muted);padding:50px;font-style:italic}
+
+  /* ===== ADMIN ===== */
+  .admin-note{background:var(--panel);border:1px solid var(--line2);border-left:3px solid var(--turq);border-radius:12px;padding:16px 20px;margin-bottom:22px;font-size:14px;font-weight:500;color:var(--ink)}
+  .admin-actions{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+  .btn{font-family:'Manrope';font-weight:700;font-size:14px;padding:12px 22px;border-radius:10px;border:none;cursor:pointer;transition:all .2s}
+  .btn-light{background:var(--ink);color:#000}
+  .btn-light:hover{transform:translateY(-2px)}
+  .btn-ghost{background:rgba(255,255,255,.04);color:var(--ink);border:1px solid var(--line2)}
+  .btn-red{background:var(--red);color:#fff}
+  .admin-match{display:grid;grid-template-columns:1fr 60px 24px 60px 1fr auto;gap:13px;align-items:center;padding:15px 18px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);margin-bottom:6px}
+  .am-team{font-family:'Manrope';font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+  .am-team.right{justify-content:flex-end;text-align:right}
+  .admin-match input{width:100%;padding:11px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);text-align:center;font-family:'Barlow Condensed';font-weight:800;font-size:20px}
+  .admin-match input:focus{outline:none;border-color:var(--turq)}
+  .am-vs{text-align:center;color:var(--muted);font-family:'JetBrains Mono';font-size:11px;font-weight:700}
+  .btn-save{font-family:'Manrope';font-weight:700;font-size:13px;padding:10px 16px;border-radius:9px;border:none;cursor:pointer;background:var(--green);color:#003;transition:all .2s}
+  .btn-save.saved{background:var(--gold);color:#000}
+  .match-meta-line{font-family:'JetBrains Mono';font-size:9px;color:var(--muted2);text-align:center;margin:-2px 0 12px;letter-spacing:.06em;text-transform:uppercase}
+  .mvp-admin-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:14px 18px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);margin-bottom:8px}
+  .mvp-admin-row.has-mvp{border-left:3px solid var(--gold)}
+  .mvp-admin-info{font-family:'Manrope';font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+  .mvp-admin-info .vs{color:var(--muted);font-weight:400;margin:0 4px}
+  .mvp-admin-info .meta{display:block;font-family:'JetBrains Mono';font-size:9px;color:var(--muted);font-weight:400;margin-top:3px;letter-spacing:.06em}
+  .mvp-select{padding:11px 14px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);font-family:'Manrope';font-weight:600;font-size:13px;min-width:230px}
+  .mvp-select:focus{outline:none;border-color:var(--gold)}
+
+  /* ===== MODAL ===== */
+  .modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:22px}
+  .modal-overlay.show{display:flex;animation:fade .3s ease}
+  .modal{background:var(--panel);border:1px solid var(--line2);border-radius:18px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;position:relative}
+  .modal::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,var(--coral),var(--turq) 40%,var(--purple) 70%,var(--lime));border-radius:18px 18px 0 0}
+  .modal-header{padding:30px}
+  .modal-header .flag{font-size:60px;line-height:1}
+  .modal-header h2{font-family:'Barlow Condensed';font-weight:800;font-size:40px;letter-spacing:.02em;text-transform:uppercase;margin-top:8px}
+  .modal-header .cap{font-family:'JetBrains Mono';font-size:11px;color:var(--turq);letter-spacing:.1em;margin-top:5px}
+  .modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:var(--bg2);color:#fff;font-size:17px;cursor:pointer;transition:all .2s;z-index:2}
+  .modal-close:hover{background:var(--red);border-color:var(--red)}
+  .modal-body{padding:0 28px 28px}
+  .modal-body h3{font-family:'Barlow Condensed';font-weight:700;font-size:16px;letter-spacing:.05em;text-transform:uppercase;color:var(--turq);margin:20px 0 12px}
+  .roster-row{display:grid;grid-template-columns:42px 1fr auto;gap:14px;align-items:center;padding:10px 14px;border-radius:9px;background:var(--bg2);margin-bottom:6px}
+  .roster-row .rn{font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:var(--tc);text-align:center;filter:brightness(1.6)}
+  .roster-row .nick{font-family:'Manrope';font-weight:700;font-size:15px}
+  .roster-row .full{font-size:11px;color:var(--muted)}
+  .roster-row .rg{font-family:'JetBrains Mono';font-size:10px;color:var(--turq);background:rgba(30,224,197,.1);padding:4px 8px;border-radius:6px}
+  .modal-match{display:flex;align-items:center;justify-content:space-between;padding:12px 15px;border-radius:9px;background:var(--bg2);margin-bottom:6px;font-size:14px}
+  .modal-match .mm-rival{font-family:'Manrope';font-weight:700;display:flex;align-items:center;gap:8px}
+  .modal-match .mm-result{font-family:'Barlow Condensed';font-weight:800;font-size:20px;color:var(--gold)}
+  .modal-match .mm-when{font-family:'JetBrains Mono';font-size:9px;color:var(--muted)}
+
+  .foot{text-align:center;padding:32px;color:var(--muted2);font-family:'JetBrains Mono';font-size:10px;letter-spacing:.16em;border-top:1px solid var(--line);margin-top:40px}
+
+  @media (max-width:760px){
+    .dash-grid{grid-template-columns:1fr}
+    .hero h2{font-size:42px}
+    .section-head h2{font-size:32px}
+    .admin-match{grid-template-columns:1fr 44px 16px 44px 1fr;gap:7px}
+    .admin-match .btn-save{grid-column:1/-1;margin-top:8px}
+    .mvp-admin-row{grid-template-columns:1fr}
+    .mvp-select{min-width:0;width:100%}
+    .mvp-row{flex-direction:column;align-items:stretch;gap:14px}
+    .mvp-divider{width:100%;height:1px;margin:0}
+    .nav button{padding:8px 11px;font-size:12px}
+    .sb-side .full{display:none}
+    .hide-mobile{display:none}
+  }
+  @media (min-width:761px){ .sb-side .abbr{display:none} }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-img" id="logoImg"></div>
+      <div class="logo-text"><h1>Intercolleras</h1><span>PROM XXXIII</span></div>
+    </div>
+    <nav class="nav" id="nav">
+      <button data-view="dashboard" class="active">Inicio</button>
+      <button data-view="tabla">Tabla</button>
+      <button data-view="fixture">Fixture</button>
+      <button data-view="equipos">Equipos</button>
+      <button data-view="mvp">Jugadores</button>
+      <button data-view="admin">Admin</button>
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+  <section class="view active" id="view-dashboard"></section>
+  <section class="view" id="view-tabla"></section>
+  <section class="view" id="view-fixture"></section>
+  <section class="view" id="view-equipos"></section>
+  <section class="view" id="view-mvp"></section>
+  <section class="view" id="view-admin"></section>
+  <div class="foot">INTERCOLLERAS PROM XXXIII · 16 EQUIPOS · MUNDIAL 2026</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginOverlay">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <div class="modal-header" style="padding:30px 30px 10px">
+      <div style="font-size:42px">🔒</div>
+      <h2 style="font-size:32px">Acceso Admin</h2>
+      <div class="cap" style="color:var(--muted)">Ingresa tus credenciales</div>
+    </div>
+    <div class="modal-body" style="padding:10px 30px 30px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <input id="loginUser" type="text" placeholder="Usuario" autocomplete="username"
+          style="padding:13px 15px;border-radius:10px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font-family:'Manrope';font-size:15px">
+        <input id="loginPass" type="password" placeholder="Contraseña" autocomplete="current-password"
+          style="padding:13px 15px;border-radius:10px;border:1px solid var(--line2);background:var(--bg2);color:var(--ink);font-family:'Manrope';font-size:15px"
+          onkeydown="if(event.key==='Enter')doLogin()">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer">
+          <input type="checkbox" id="loginRemember" style="width:16px;height:16px;cursor:pointer"> Recordar sesión en este dispositivo
+        </label>
+        <div id="loginError" style="display:none;color:var(--red);font-size:13px;font-weight:600;text-align:center">✗ Usuario o contraseña incorrectos</div>
+        <button class="btn btn-light" style="width:100%;margin-top:6px" onclick="doLogin()">Ingresar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LOGO_B64="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";
+const DATA={"equipos":[{"nombre":"Holanda","bandera":"🇳🇱","capitan":"Santiago Mackey","color":"#FF6B1A","plantel":[{"d":"28","a":"Makiki","n":"Santiago Mackey","g":"11"},{"d":"7","a":"Piero P.","n":"Piero Palacios","g":"10"},{"d":"11","a":"Saffer","n":"Patrick Saffer","g":"9"},{"d":"14","a":"Stefano","n":"Stefano Palacios","g":"9"},{"d":"20","a":"Grifo","n":"Joaquin Grieve","g":"10"},{"d":"4","a":"Mori","n":"Diego Mori","g":"9"}]},{"nombre":"Escocia","bandera":"🏴󠁧󠁢󠁳󠁣󠁴󠁿","capitan":"Sebastián Romero","color":"#0065BD","plantel":[{"d":"3","a":"Chita","n":"Sebastian Romero","g":"11"},{"d":"6","a":"Tito","n":"Juan Diego Linares","g":"11"},{"d":"17","a":"Cronex","n":"Joaquín Cisneros","g":"11"},{"d":"7","a":"Dainamond","n":"Daniel Urquizo","g":"11"},{"d":"99","a":"Diego P","n":"Diego Peralta","g":"10"},{"d":"14","a":"Capi","n":"Gonzalo Lozano","g":"9"}]},{"nombre":"Alemania","bandera":"🇩🇪","capitan":"Joaquín Janampa","color":"#1A1A1A","plantel":[{"d":"6","a":"Fireniper","n":"Alejandro Gonzales","g":"11"},{"d":"7","a":"Yogui","n":"Joaquín Janampa","g":"11"},{"d":"10","a":"Waldo","n":"Rodrigo Laos","g":"10"},{"d":"11","a":"Tintin","n":"Agustín Merea","g":"10"},{"d":"8","a":"Teffo","n":"Estafano Segura","g":"10"},{"d":"9","a":"Fonseca","n":"Vasco Fonseca","g":"9"}]},{"nombre":"Marruecos","bandera":"🇲🇦","capitan":"Gonzalo Lopez","color":"#C1272D","plantel":[{"d":"1","a":"TATI","n":"Gonzalo Lopez","g":"10"},{"d":"10","a":"Fukunaga","n":"Luis Matias Fukunaga","g":"10"},{"d":"15","a":"Rama","n":"Ramiro Bilbao","g":"10"},{"d":"18","a":"APOLO","n":"Mariano García","g":"10"},{"d":"5","a":"Velarde","n":"Claudio Velarde","g":"9"},{"d":"8","a":"OLIVA","n":"Joaquin Olivares","g":"11"}]},{"nombre":"Mexico","bandera":"🇲🇽","capitan":"Juan Pablo Campero","color":"#006847","plantel":[{"d":"20","a":"Jotape","n":"Juan Pablo Campero","g":"11"},{"d":"10","a":"Cristorata","n":"Joaquín Andujar","g":"11"},{"d":"1","a":"Dextre","n":"Angello Ravello","g":"11"},{"d":"7","a":"El Patrón","n":"Fabian Moreno","g":"11"},{"d":"21","a":"Jotae","n":"Jose Enrique Campero","g":"10"},{"d":"11","a":"Suazo","n":"Mariano Lastra","g":"9"}]},{"nombre":"España","bandera":"🇪🇸","capitan":"Santiago Eduardo","color":"#AA151B","plantel":[{"d":"11","a":"Brock","n":"Santiago Eduardo","g":"11"},{"d":"7","a":"DIego","n":"Diego Eduardo","g":"11"},{"d":"51","a":"JIJI","n":"Gonzalo Arana","g":"11"},{"d":"29","a":"Torres","n":"Alonso Torres","g":"10"},{"d":"10","a":"CP","n":"Carlos Ponce","g":"11"},{"d":"19","a":"Mini CP","n":"Fabricio Ponce","g":"9"},{"d":"9","a":"Vini","n":"Vincenzo Rosaza","g":"10"}]},{"nombre":"Japón","bandera":"🇯🇵","capitan":"Nicolas Paredes","color":"#BC002D","plantel":[{"d":"7","a":"Moquegua","n":"Nicolas Paredes","g":"11"},{"d":"8","a":"Topo","n":"Alonso Egusquiza","g":"11"},{"d":"9","a":"Myke","n":"Santiago Latinez","g":"11"},{"d":"10","a":"Patoca","n":"Diego Malca","g":"11"},{"d":"99","a":"Latinez","n":"Nicolas Latinez","g":"9"},{"d":"19","a":"Laos","n":"Marcelo Laos","g":"10"}]},{"nombre":"Uruguay","bandera":"🇺🇾","capitan":"Sebastian Guardia","color":"#0038A8","plantel":[{"d":"8","a":"Bizcocho","n":"Sebastian Guardia","g":"10"},{"d":"4","a":"Mogul","n":"Adriano Cruz","g":"10"},{"d":"11","a":"Francisco","n":"Francisco Avila","g":"11"},{"d":"10","a":"YOPO","n":"Matias Muñoz","g":"10"},{"d":"9","a":"Macallister","n":"Alfonso Velasquez","g":"10"},{"d":"26","a":"Caceda","n":"Santiago Caceda","g":"9"}]},{"nombre":"Jamaica","bandera":"🇯🇲","capitan":"Catello Arostegui","color":"#009B3A","plantel":[{"d":"0","a":"Cate","n":"Catello Arostegui","g":"10"},{"d":"0","a":"Tiaré","n":"Renato Stucchi","g":"10"},{"d":"55","a":"Josh","n":"Jose Andres Armas","g":"10"},{"d":"33","a":"Kispe","n":"Mateo Quispe","g":"9"},{"d":"99","a":"Gringo","n":"Alejandro Ramirez","g":"11"},{"d":"1","a":"Sevilla","n":"Santiago Sevilla","g":"10"}]},{"nombre":"Suecia","bandera":"🇸🇪","capitan":"Leonardo Aliaga","color":"#006AA7","plantel":[{"d":"10","a":"Winnie Pooh","n":"Leonardo Aliaga","g":"10"},{"d":"11","a":"Montesinos","n":"Ian Montesinos","g":"10"},{"d":"21","a":"Advincula","n":"José Andres Ullauri","g":"10"},{"d":"81","a":"Muñoz","n":"Mariano Muñoz","g":"10"},{"d":"77","a":"Gamio","n":"Claudio Gamio","g":"9"},{"d":"7","a":"Missiego","n":"Rafael Missiego","g":"11"}]},{"nombre":"Iran","bandera":"🇮🇷","capitan":"Santiago Reategui","color":"#239F40","plantel":[{"d":"47","a":"Amir Mohammadi","n":"Santiago Reategui","g":"11"},{"d":"911","a":"Brotha","n":"Felipe Pezo","g":"11"},{"d":"16","a":"Abdol Rahim","n":"Rodrigo Cuba","g":"11"},{"d":"200","a":"Hassan Kahatt","n":"Kamil Quezada","g":"11"},{"d":"6","a":"Tori","n":"Héctor Tosta","g":"9"},{"d":"23","a":"EÑE","n":"Santi Bautista","g":"10"}]},{"nombre":"Curazao","bandera":"🇨🇼","capitan":"Fabrizio Cortez","color":"#002B7F","plantel":[{"d":"99","a":"Bizzio M.","n":"Fabrizio Cortez","g":"11"},{"d":"12","a":"Jeffry P","n":"Rafael Quevedo","g":"11"},{"d":"80","a":"Martinic","n":"Matias Diaz","g":"11"},{"d":"10","a":"Papita","n":"Marcelo Reyes","g":"11"},{"d":"22","a":"Tafur","n":"Matias Tafur","g":"9"},{"d":"17","a":"Llerena","n":"Leonardo Llerena","g":"10"}]},{"nombre":"Uzbekistan","bandera":"🇺🇿","capitan":"Tiago Torres","color":"#1EB53A","plantel":[{"d":"0","a":"Maní","n":"Tiago Torres","g":"11"},{"d":"7","a":"Gordildo","n":"Fabian Lastres","g":"11"},{"d":"8","a":"CHIBONOLOV","n":"Joaquin Saldaña","g":"11"},{"d":"10","a":"Rambo","n":"Franco Pastor","g":"11"},{"d":"11","a":"Prado","n":"Alfredo Prado","g":"9"},{"d":"9","a":"NASRRAMONKOVADOV","n":"Franco Nasra","g":"9"}]},{"nombre":"Senegal","bandera":"🇸🇳","capitan":"Jorge Jimenez","color":"#00853F","plantel":[{"d":"101","a":"Giorgio Joestar","n":"Jorge Jimenez","g":"11"},{"d":"19","a":"Echoes","n":"Andre Luca","g":"11"},{"d":"14","a":"Patricio","n":"Marcelo Gamarra","g":"11"},{"d":"29","a":"Zorro","n":"Salvador Iberico","g":"11"},{"d":"1","a":"Marky Mark","n":"Marco Luca","g":"9"},{"d":"18","a":"Nasir II","n":"Adriano Coronado","g":"10"}]},{"nombre":"Croacia","bandera":"🇭🇷","capitan":"Carlos Armas","color":"#FF0000","plantel":[{"d":"7","a":"Bugatti","n":"Carlos Armas","g":"10"},{"d":"10","a":"Flying","n":"Santiago Aliaga","g":"10"},{"d":"11","a":"El Loco","n":"Felipe Portilla","g":"10"},{"d":"8","a":"Moreano","n":"Adrian Moreano","g":"9"},{"d":"81","a":"Timmy","n":"Octavio Moran","g":"10"},{"d":"6","a":"Manolo","n":"Tomas Gomero","g":"11"}]},{"nombre":"Inglaterra","bandera":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","capitan":"Tadeo Solano","color":"#012169","plantel":[{"d":"9","a":"Vitteri","n":"Guillermo Vitteri","g":"9"},{"d":"17","a":"Rolando","n":"Salvador Rolando","g":"9"},{"d":"7","a":"Mujica","n":"Leonardo Mujico","g":"9"},{"d":"3","a":"Chino","n":"Gonzalo Perez","g":"10"},{"d":"10","a":"VIgil","n":"Andres Vigil","g":"9"},{"d":"11","a":"Cabal","n":"Santiago Cabalcanti","g":"9"},{"d":"-","a":"","n":"Matías Gómez","g":"9"}]}],"fixture":[{"id":1,"local":"Senegal","visitante":"Iran","inaugural":true,"fecha":1,"dia":"Martes 19","recreo":"2do Recreo"},{"id":2,"local":"Holanda","visitante":"Escocia","inaugural":false,"fecha":1,"dia":"Jueves 21","recreo":"2do Recreo"},{"id":3,"local":"Alemania","visitante":"Marruecos","inaugural":false,"fecha":1,"dia":"Miércoles 20","recreo":"2do Recreo"},{"id":4,"local":"Mexico","visitante":"Jamaica","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":5,"local":"España","visitante":"Curazao","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":6,"local":"Japón","visitante":"Marruecos","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":7,"local":"Uruguay","visitante":"Jamaica","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":8,"local":"Suecia","visitante":"Croacia","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":9,"local":"Uzbekistan","visitante":"Holanda","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":10,"local":"Inglaterra","visitante":"Holanda","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":11,"local":"Escocia","visitante":"Japón","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":12,"local":"Alemania","visitante":"Inglaterra","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":13,"local":"Mexico","visitante":"España","inaugural":false,"fecha":1,"dia":"Viernes 22","recreo":"1er Recreo"},{"id":14,"local":"Uruguay","visitante":"Suecia","inaugural":false,"fecha":1,"dia":"Jueves 21","recreo":"1er Recreo"},{"id":15,"local":"Iran","visitante":"Mexico","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":16,"local":"Croacia","visitante":"Uzbekistan","inaugural":false,"fecha":1,"dia":"Jueves 21","recreo":"1er Recreo"},{"id":17,"local":"Curazao","visitante":"Japón","inaugural":false,"fecha":1,"dia":"Miércoles 20","recreo":"2do Recreo"},{"id":18,"local":"Senegal","visitante":"Croacia","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":19,"local":"Escocia","visitante":"Uruguay","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":20,"local":"Alemania","visitante":"España","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":21,"local":"Marruecos","visitante":"Suecia","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":22,"local":"Jamaica","visitante":"Inglaterra","inaugural":false,"fecha":1,"dia":"Jueves 21","recreo":"2do Recreo"},{"id":23,"local":"Iran","visitante":"Curazao","inaugural":false,"fecha":0,"dia":"","recreo":""},{"id":24,"local":"Uzbekistan","visitante":"Senegal","inaugural":false,"fecha":0,"dia":"","recreo":""}]};
+document.getElementById('logoImg').style.backgroundImage=`url('data:image/png;base64,${LOGO_B64}')`;
+const LOGO_URL=`data:image/png;base64,${LOGO_B64}`;
+
+let RESULTS={},MVPS={};
+
+/* ============================================================
+   CREDENCIALES DE ADMIN
+   👉 PARA CAMBIAR usuario/contraseña, edita estas 2 líneas:
+   ============================================================ */
+const ADMIN_USER = "IntercollerasAdmin2026";
+const ADMIN_PASS = "LAPROM33";
+/* ============================================================ */
+
+let isAdmin = false;
+const LS_SESSION = 'intercolleras_admin_session';
+
+function checkSession(){
+  try{ if(sessionStorage.getItem(LS_SESSION)==='1') isAdmin=true; }catch(e){}
+  try{ if(localStorage.getItem(LS_SESSION)==='1') isAdmin=true; }catch(e){}
+}
+function openLogin(){
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginError').style.display='none';
+  document.getElementById('loginOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('loginUser').focus(),100);
+}
+function closeLogin(){ document.getElementById('loginOverlay').classList.remove('show'); }
+function doLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  const remember=document.getElementById('loginRemember').checked;
+  if(u===ADMIN_USER && p===ADMIN_PASS){
+    isAdmin=true;
+    try{ sessionStorage.setItem(LS_SESSION,'1'); }catch(e){}
+    if(remember){ try{ localStorage.setItem(LS_SESSION,'1'); }catch(e){} }
+    closeLogin();
+    switchView('admin');
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+function logout(){
+  isAdmin=false;
+  try{ sessionStorage.removeItem(LS_SESSION); }catch(e){}
+  try{ localStorage.removeItem(LS_SESSION); }catch(e){}
+  switchView('dashboard');
+}
+document.getElementById('loginOverlay').addEventListener('click',e=>{if(e.target.id==='loginOverlay')closeLogin()});
+const LS_RESULTS='intercolleras_results_v2',LS_MVPS='intercolleras_mvps_v1';
+const DEFAULT_RESULTS={"1": {"golL": 0, "golV": 2}, "17": {"golL": 5, "golV": 1}, "3": {"golL": 0, "golV": 5}, "16": {"golL": 10, "golV": 1}, "14": {"golL": 5, "golV": 1}, "22": {"golL": 10, "golV": 1}};
+function loadState(){
+  try{const r=localStorage.getItem(LS_RESULTS);if(r)RESULTS=JSON.parse(r);else RESULTS=Object.assign({},DEFAULT_RESULTS)}catch(e){RESULTS=Object.assign({},DEFAULT_RESULTS)}
+  try{const m=localStorage.getItem(LS_MVPS);if(m)MVPS=JSON.parse(m)}catch(e){MVPS={}}
+}
+function saveResults(){try{localStorage.setItem(LS_RESULTS,JSON.stringify(RESULTS))}catch(e){}}
+function saveMvps(){try{localStorage.setItem(LS_MVPS,JSON.stringify(MVPS))}catch(e){}}
+function exportData(){const p={results:RESULTS,mvps:MVPS,exported:new Date().toISOString()};const b=new Blob([JSON.stringify(p,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='intercolleras_datos.json';a.click();URL.revokeObjectURL(u)}
+function importData(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{try{const p=JSON.parse(e.target.result);if(p.results)RESULTS=p.results;if(p.mvps)MVPS=p.mvps;saveResults();saveMvps();renderAdmin();alert('✓ Datos importados.')}catch(err){alert('✗ Archivo inválido')}};r.readAsText(f)}
+function resetData(){if(!confirm('¿Borrar TODOS los resultados y MVPs?'))return;RESULTS={};MVPS={};saveResults();saveMvps();renderAdmin();alert('Datos borrados.')}
+
+function getEq(n){return DATA.equipos.find(e=>e.nombre===n)}
+function bandera(n){const e=getEq(n);return e?e.bandera:'🏳️'}
+function color(n){const e=getEq(n);return e?e.color:'#444'}
+function abbr(n){return n.slice(0,3).toUpperCase()}
+function jugado(id){return RESULTS[id]&&RESULTS[id].golL!=null&&RESULTS[id].golV!=null}
+
+function calcStandings(){
+  const t={};DATA.equipos.forEach(e=>{t[e.nombre]={nombre:e.nombre,pj:0,pg:0,pe:0,pp:0,gf:0,gc:0,pts:0}});
+  DATA.fixture.forEach(m=>{if(!jugado(m.id))return;const r=RESULTS[m.id],L=t[m.local],V=t[m.visitante];if(!L||!V)return;
+    L.pj++;V.pj++;L.gf+=r.golL;L.gc+=r.golV;V.gf+=r.golV;V.gc+=r.golL;
+    if(r.golL>r.golV){L.pg++;L.pts+=3;V.pp++}else if(r.golL<r.golV){V.pg++;V.pts+=3;L.pp++}else{L.pe++;V.pe++;L.pts++;V.pts++}});
+  const a=Object.values(t);a.forEach(x=>x.dg=x.gf-x.gc);
+  a.sort((x,y)=>y.pts-x.pts||y.dg-x.dg||y.gf-x.gf||x.nombre.localeCompare(y.nombre));return a;
+}
+
+// ===== SCOREBAR (estilo FIFA 2026 sobrio) =====
+function scorebar(m){
+  const r=RESULTS[m.id],done=jugado(m.id);
+  const clock=m.inaugural&&!done?'INAUG':(done?'FIN':(m.dia?m.dia.slice(0,3).toUpperCase():'TBD'));
+  return `<div class="scorebar" onclick="openMatch(${m.id})">
+    <div class="sb-side left">
+      <span class="full">${m.local.toUpperCase()}</span>
+      <span class="abbr">${abbr(m.local)}</span>
+      <span class="kit" style="background:${color(m.local)}"></span>
+      <span class="flag">${bandera(m.local)}</span>
+    </div>
+    <div class="sb-mid">
+      ${done?`<span class="sb-num">${r.golL}</span>`:''}
+      <span class="sb-logo" style="background-image:url('${LOGO_URL}')"></span>
+      ${done?`<span class="sb-num">${r.golV}</span>`:`<span class="sb-vs">VS</span>`}
+    </div>
+    <div class="sb-side">
+      <span class="flag">${bandera(m.visitante)}</span>
+      <span class="kit" style="background:${color(m.visitante)}"></span>
+      <span class="abbr">${abbr(m.visitante)}</span>
+      <span class="full">${m.visitante.toUpperCase()}</span>
+    </div>
+    <div class="sb-clock ${done?'':'pending'}">${clock}</div>
+  </div>`;
+}
+
+function renderDashboard(){
+  const jug=DATA.fixture.filter(m=>jugado(m.id));
+  const ult=jug.length?jug[jug.length-1]:null;
+  const prox=DATA.fixture.filter(m=>!jugado(m.id)).slice(0,3);
+  const st=calcStandings();const lider=st[0];
+  const mvpCount=Object.keys(MVPS).filter(id=>MVPS[id]).length;
+  document.getElementById('view-dashboard').innerHTML=`
+    <div class="hero">
+      <h2>El torneo<br><span class="accent">de la XXXIII</span></h2>
+      <p>Formato Champions League. 16 equipos, solo 4 quedan fuera, una sola copa. El intercolleras de la 33.</p>
+      .logo{display:flex;align-items:center;gap:13px;flex-shrink:0}
+      .logo-img{width:46px;height:46px;border-radius:50%;background:#000 center/cover no-repeat;box-shadow:0 0 0 1px var(--line2)}
+      <div class="hero-stats">
+        <div class="hstat" style="--c:var(--turq)"><div class="n">16</div><div class="l">Equipos</div></div>
+        <div class="hstat" style="--c:var(--lime)"><div class="n">${jug.length}<span style="font-size:16px;color:var(--muted)">/24</span></div><div class="l">Jugados</div></div>
+        <div class="hstat" style="--c:var(--coral)"><div class="n">${lider&&lider.pj?abbr(lider.nombre):'—'}</div><div class="l">Líder</div></div>
+        <div class="hstat" style="--c:var(--purple)"><div class="n">${mvpCount}</div><div class="l">MVPs</div></div>
+      </div>
+    </div>
+    <div class="dash-grid">
+      <div class="card card-pad">
+        <h3><span class="dot" style="background:var(--turq)"></span>Próximos partidos</h3>
+        ${prox.length?prox.map(scorebar).join(''):'<p style="color:var(--muted)">¡Todos jugados! 🏆</p>'}
+      </div>
+      <div class="card card-pad">
+        <h3><span class="dot" style="background:var(--gold)"></span>Último resultado</h3>
+        ${ult?scorebar(ult):'<p style="color:var(--muted)">Aún no hay resultados.</p>'}
+        <h3 style="margin-top:22px"><span class="dot" style="background:var(--coral)"></span>Tabla · Top 5</h3>
+        ${st.slice(0,5).map((t,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid var(--line)">
+          <span style="font-family:'Barlow Condensed';font-weight:700;font-size:16px;color:${i<4?'var(--turq)':'var(--muted)'};width:22px">${i+1}</span>
+          <span style="font-size:21px">${bandera(t.nombre)}</span>
+          <span style="font-family:'Manrope';font-weight:700;font-size:14px;flex:1">${t.nombre}</span>
+          <span style="font-family:'Barlow Condensed';font-weight:800;font-size:17px;color:var(--gold)">${t.pts}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderTabla(){
+  const s=calcStandings();
+  const rows=s.map((t,i)=>`<tr>
+    <td class="pos">${i+1}</td>
+    <td class="team-cell" onclick="openTeam('${t.nombre}')"><span class="flag">${bandera(t.nombre)}</span><span class="name">${t.nombre}</span></td>
+    <td>${t.pj}</td><td class="hide-mobile">${t.pg}</td><td class="hide-mobile">${t.pe}</td><td class="hide-mobile">${t.pp}</td>
+    <td class="hide-mobile">${t.gf}</td><td class="hide-mobile">${t.gc}</td>
+    <td class="${t.dg>0?'gd-pos':t.dg<0?'gd-neg':''}">${t.dg>0?'+':''}${t.dg}</td><td class="pts">${t.pts}</td></tr>`).join('');
+  document.getElementById('view-tabla').innerHTML=`
+    <div class="section-head"><h2>Tabla</h2><div class="sub">Clasificación · 3 pts victoria · 1 empate</div></div>
+    <div class="table-wrap"><table class="standings"><thead><tr>
+      <th>#</th><th class="team-col">Equipo</th><th>PJ</th>
+      <th class="hide-mobile">PG</th><th class="hide-mobile">PE</th><th class="hide-mobile">PP</th>
+      <th class="hide-mobile">GF</th><th class="hide-mobile">GC</th><th>DG</th><th>PTS</th>
+    </tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="legend"><span><b>PJ</b> Jugados</span><span><b>PG</b> Ganados</span><span><b>PE</b> Empat.</span><span><b>PP</b> Perdidos</span><span><b>GF</b> G.Favor</span><span><b>GC</b> G.Contra</span><span><b>DG</b> Dif.</span><span><b>PTS</b> Puntos</span></div>`;
+}
+
+function renderFixture(){
+  const fecha1=DATA.fixture.filter(m=>m.fecha===1);
+  const pend=DATA.fixture.filter(m=>m.fecha!==1);
+  // Días en el orden en que aparecen
+  const dias=[...new Set(fecha1.map(m=>m.dia))];
+  let f1='';
+  dias.forEach(dia=>{
+    const dd=fecha1.filter(m=>m.dia===dia);if(!dd.length)return;
+    const recreos=[...new Set(dd.map(m=>m.recreo))];
+    f1+=`<div class="day-sub">${dia}</div>`;
+    recreos.forEach(rec=>{ dd.filter(m=>m.recreo===rec).forEach(m=>f1+=scorebar(m)); });
+  });
+  document.getElementById('view-fixture').innerHTML=`
+    <div class="section-head"><h2>Fixture</h2><div class="sub">24 partidos · 3 fechas</div></div>
+    <div class="fecha-group"><div class="fecha-head"><span class="ft">Fecha 1</span><span class="badge badge-live">Programada</span></div>${f1}</div>
+    <div class="fecha-group"><div class="fecha-head"><span class="ft">Fechas 2 y 3</span><span class="badge badge-pend">Por programar</span></div>${pend.map(scorebar).join('')}</div>`;
+}
+
+function renderEquipos(){
+  const cards=DATA.equipos.map(e=>`<div class="team-card" style="--tc:${e.color}" onclick="openTeam('${e.nombre}')">
+    <div class="flag">${e.bandera}</div>
+    <div class="name">${e.nombre.toUpperCase()}</div>
+    <div class="cap">CAP · ${e.capitan.toUpperCase()}</div>
+    <div class="count">${e.plantel.length} jugadores →</div>
+  </div>`).join('');
+  document.getElementById('view-equipos').innerHTML=`
+    <div class="section-head"><h2>Equipos</h2><div class="sub">16 equipos · toca para ver el plantel</div></div>
+    <div class="teams-grid">${cards}</div>`;
+}
+
+let mvpFecha=1;
+// Orden cronológico de días y recreos
+const ORDEN_DIA={'Lunes':1,'Martes':2,'Miércoles':3,'Jueves':4,'Viernes':5,'Sábado':6,'Domingo':7};
+const ORDEN_RECREO={'1er Recreo':1,'2do Recreo':2,'3er Recreo':3};
+function ordenDia(d){
+  if(!d)return 99;
+  // extraer nombre del día (ej "Martes 19" -> "Martes")
+  const nombre=d.split(' ')[0];
+  const num=parseInt((d.match(/\d+/)||[99])[0]);
+  return (ORDEN_DIA[nombre]||50)*100 + (isNaN(num)?0:num);
+}
+function ordenPartido(m){
+  return ordenDia(m.dia)*10 + (ORDEN_RECREO[m.recreo]||9);
+}
+function renderMvp(){
+  const fechasDisp=[1];
+  const partidos=DATA.fixture.filter(m=>m.fecha===mvpFecha);
+  // Ordenar cronológicamente por día y recreo
+  const conMvp=partidos.filter(m=>MVPS[m.id]).sort((a,b)=>ordenPartido(a)-ordenPartido(b));
+  let rows='';
+  if(conMvp.length){
+    rows=conMvp.map(m=>{
+      const[en,jn]=MVPS[m.id].split('|');const eq=getEq(en);const jug=eq?eq.plantel.find(j=>j.n===jn):null;
+      if(!jug)return '';
+      const r=RESULTS[m.id],done=jugado(m.id);
+      const cuando=m.inaugural?'⭐ Inaugural':(m.dia?`${m.dia} · ${m.recreo}`:'Por programar');
+      return `<div class="mvp-row" style="--tc:${eq.color}">
+        <div class="mvp-match-info">
+          <div class="mm-label">${cuando}</div>
+          <div class="mm-teams">${bandera(m.local)} ${m.local.toUpperCase()} ${done?`<span class="sc">${r.golL}-${r.golV}</span>`:'<span class="vs">vs</span>'} ${m.visitante.toUpperCase()} ${bandera(m.visitante)}</div>
+        </div>
+        <div class="mvp-divider"></div>
+        <div class="mvp-player">
+          <div class="num">${jug.d}</div>
+          <div class="pinfo">
+            <div class="star">★ MVP</div>
+            <div class="nick">${jug.a||jug.n.split(' ')[0]}</div>
+            <div class="full">${jug.n}</div>
+            <div class="tm">${eq.bandera} ${eq.nombre}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    rows=`<div class="mvp-empty">Aún no se han elegido los MVPs de esta fecha.<br>Ve al panel <b>Admin</b> para asignarlos.</div>`;
+  }
+  const tabs=fechasDisp.map(f=>`<button class="${mvpFecha===f?'active':''}" onclick="setMvpFecha(${f})">Fecha ${f}</button>`).join('');
+  document.getElementById('view-mvp').innerHTML=`
+    <div class="section-head"><h2>Jugadores de la Fecha</h2><div class="sub">El mejor jugador de cada partido · en orden cronológico</div></div>
+    <div class="mvp-tabs">${tabs}</div>
+    <div class="mvp-list">${rows}</div>`;
+}
+function setMvpFecha(f){mvpFecha=f;renderMvp()}
+
+function renderAdmin(){
+  const matchInputs=DATA.fixture.map(m=>{
+    const r=RESULTS[m.id]||{};
+    const meta=m.inaugural?'⭐ Inaugural':(m.fecha?`F${m.fecha} · ${m.dia} ${m.recreo}`:'Por programar');
+    return `<div class="admin-match">
+      <div class="am-team right">${m.local.toUpperCase()} <span style="font-size:20px">${bandera(m.local)}</span></div>
+      <input type="number" min="0" id="gl-${m.id}" value="${r.golL!=null?r.golL:''}" placeholder="-">
+      <div class="am-vs">VS</div>
+      <input type="number" min="0" id="gv-${m.id}" value="${r.golV!=null?r.golV:''}" placeholder="-">
+      <div class="am-team"><span style="font-size:20px">${bandera(m.visitante)}</span> ${m.visitante.toUpperCase()}</div>
+      <button class="btn-save" onclick="saveMatch(${m.id})">Guardar</button>
+    </div><div class="match-meta-line">${meta}</div>`;
+  }).join('');
+  const mvpRows=DATA.fixture.map(m=>{
+    const eqL=getEq(m.local),eqV=getEq(m.visitante);
+    const optsL=eqL.plantel.map(j=>`<option value="${m.local}|${j.n}" ${MVPS[m.id]===m.local+'|'+j.n?'selected':''}>${m.local}: ${j.a||j.n}</option>`).join('');
+    const optsV=eqV.plantel.map(j=>`<option value="${m.visitante}|${j.n}" ${MVPS[m.id]===m.visitante+'|'+j.n?'selected':''}>${m.visitante}: ${j.a||j.n}</option>`).join('');
+    const meta=m.inaugural?'⭐ Inaugural':(m.fecha?`F${m.fecha} · ${m.dia}`:'Por programar');
+    return `<div class="mvp-admin-row ${MVPS[m.id]?'has-mvp':''}">
+      <div class="mvp-admin-info">${bandera(m.local)} ${m.local.toUpperCase()} <span class="vs">vs</span> ${m.visitante.toUpperCase()} ${bandera(m.visitante)}<span class="meta">${meta}</span></div>
+      <select class="mvp-select" onchange="saveMvp(${m.id},this.value)"><option value="">— Elegir MVP —</option>${optsL}${optsV}</select>
+    </div>`;
+  }).join('');
+  document.getElementById('view-admin').innerHTML=`
+    <div class="section-head" style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap"><div><h2>Admin</h2><div class="sub">Carga resultados y elige los MVP</div></div>
+    <button class="btn btn-ghost" style="font-size:13px;padding:9px 16px" onclick="logout()">🔓 Cerrar sesión</button></div>
+    <div class="admin-note">💾 Todo se guarda automáticamente en este navegador. Usa <b>Exportar</b> / <b>Importar</b> para pasar los datos a otro dispositivo.</div>
+    <div class="admin-actions">
+      <button class="btn btn-light" onclick="exportData()">⬇ Exportar datos</button>
+      <label class="btn btn-ghost" style="cursor:pointer">⬆ Importar datos<input type="file" accept="application/json" onchange="importData(this)" style="display:none"></label>
+      <button class="btn btn-red" onclick="resetData()">🗑 Borrar todo</button>
+    </div>
+    <div class="card card-pad" style="margin-bottom:24px">
+      <h3><span class="dot" style="background:var(--turq)"></span>Resultados de partidos</h3>${matchInputs}
+    </div>
+    <div class="card card-pad">
+      <h3><span class="dot" style="background:var(--gold)"></span>MVP / Mejor jugador por partido</h3>${mvpRows}
+    </div>`;
+}
+function saveMatch(id){
+  const gl=document.getElementById('gl-'+id).value,gv=document.getElementById('gv-'+id).value;
+  if(gl===''||gv==='')delete RESULTS[id];else RESULTS[id]={golL:parseInt(gl),golV:parseInt(gv)};
+  saveResults();event.target.textContent='✓';event.target.classList.add('saved');
+  setTimeout(()=>{event.target.textContent='Guardar';event.target.classList.remove('saved')},1200);
+}
+function saveMvp(id,val){if(val==='')delete MVPS[id];else MVPS[id]=val;saveMvps();event.target.closest('.mvp-admin-row').classList.toggle('has-mvp',val!=='')}
+
+function openTeam(nombre){
+  const eq=getEq(nombre);
+  const partidos=DATA.fixture.filter(m=>m.local===nombre||m.visitante===nombre);
+  const rosterHtml=eq.plantel.map(j=>`<div class="roster-row"><div class="rn">${j.d}</div><div><div class="nick">${j.a||j.n}</div><div class="full">${j.n}</div></div><div class="rg">${j.g}°</div></div>`).join('');
+  const matchesHtml=partidos.map(m=>{
+    const rival=m.local===nombre?m.visitante:m.local;const r=RESULTS[m.id];let result='VS';
+    if(jugado(m.id)){const gp=m.local===nombre?r.golL:r.golV;const gr=m.local===nombre?r.golV:r.golL;result=`${gp} - ${gr}`}
+    const meta=m.inaugural?'⭐ Inaugural':(m.fecha?`F${m.fecha} · ${m.dia}`:'Por programar');
+    return `<div class="modal-match"><div class="mm-rival"><span style="font-size:20px">${bandera(rival)}</span> ${rival.toUpperCase()}</div><div style="text-align:center"><div class="mm-result">${result}</div><div class="mm-when">${meta}</div></div></div>`;
+  }).join('');
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header" style="--tc:${eq.color}">
+      <div class="flag">${eq.bandera}</div><h2>${eq.nombre.toUpperCase()}</h2><div class="cap">CAPITÁN · ${eq.capitan.toUpperCase()}</div>
+    </div>
+    <div class="modal-body" style="--tc:${eq.color}"><h3>Plantel · ${eq.plantel.length} jugadores</h3>${rosterHtml}<h3>Partidos</h3>${matchesHtml}</div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function openMatch(id){
+  const m=DATA.fixture.find(x=>x.id===id);if(!m)return;
+  const r=RESULTS[id],done=jugado(id);
+  let mvpHtml='';
+  if(MVPS[id]){const[en,jn]=MVPS[id].split('|');const eq=getEq(en);const jug=eq?eq.plantel.find(j=>j.n===jn):null;
+    if(jug)mvpHtml=`<h3 style="color:var(--gold)">★ MVP del Partido</h3><div class="roster-row" style="--tc:${eq.color}"><div class="rn">${jug.d}</div><div><div class="nick">${jug.a||jug.n}</div><div class="full">${jug.n} · ${eq.bandera} ${eq.nombre}</div></div><div class="rg">${jug.g}°</div></div>`;}
+  document.getElementById('modalContent').innerHTML=`
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <div style="text-align:center;padding:8px 0">
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px">
+          <div style="text-align:center"><div style="font-size:46px">${bandera(m.local)}</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:6px">${m.local.toUpperCase()}</div></div>
+          <div style="font-family:'Barlow Condensed';font-weight:800;font-size:38px;color:var(--gold)">${done?`${r.golL} - ${r.golV}`:'VS'}</div>
+          <div style="text-align:center"><div style="font-size:46px">${bandera(m.visitante)}</div><div style="font-family:'Barlow Condensed';font-weight:800;font-size:18px;margin-top:6px">${m.visitante.toUpperCase()}</div></div>
+        </div>
+        <div style="font-family:'JetBrains Mono';font-size:10px;color:var(--muted);margin-top:14px;letter-spacing:.1em">${m.inaugural?'⭐ PARTIDO INAUGURAL':(m.fecha?`FECHA ${m.fecha} · ${m.dia.toUpperCase()} · ${m.recreo.toUpperCase()}`:'POR PROGRAMAR')}</div>
+      </div>
+    </div>
+    <div class="modal-body">${mvpHtml||'<p style="color:var(--muted);text-align:center;padding:20px">Sin MVP asignado todavía.</p>'}</div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show')}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target.id==='modalOverlay')closeModal()});
+
+function switchView(view){
+  // Proteger el panel admin con login
+  if(view==='admin' && !isAdmin){
+    openLogin();
+    return;
+  }
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(view==='dashboard')renderDashboard();if(view==='tabla')renderTabla();if(view==='fixture')renderFixture();
+  if(view==='equipos')renderEquipos();if(view==='mvp')renderMvp();if(view==='admin')renderAdmin();
+}
+document.getElementById('nav').addEventListener('click',e=>{if(e.target.dataset.view)switchView(e.target.dataset.view)});
+(function init(){loadState();checkSession();renderDashboard()})();
+</script>
+</body>
+</html>
