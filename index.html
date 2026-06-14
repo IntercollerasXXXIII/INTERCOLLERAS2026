@@ -483,12 +483,9 @@ function subscribeFirebase(){
       if(d.bracketPens){ BRACKET_PENS = d.bracketPens; }
       if(d.bracketScores){
         BRACKET_SCORES = d.bracketScores;
-        // Firebase puede serializar arrays vacíos como undefined
-        if(!Array.isArray(BRACKET_SCORES.playoffs)) BRACKET_SCORES.playoffs=[null,null,null,null];
-        if(!Array.isArray(BRACKET_SCORES.qf)) BRACKET_SCORES.qf=[null,null,null,null];
-        if(!Array.isArray(BRACKET_SCORES.sf)) BRACKET_SCORES.sf=[null,null];
-        recomputeWinners();
       }
+      normalizeBracketStruct();
+      recomputeWinners();
     } else {
       // primera vez: sembrar con los resultados por defecto
       RESULTS = Object.assign({}, DEFAULT_RESULTS);
@@ -526,6 +523,7 @@ function loadState(){
   try{const br=localStorage.getItem('intercolleras_bracket_v1');if(br)BRACKET_RES=JSON.parse(br)}catch(e){}
   try{const bp=localStorage.getItem('intercolleras_bracket_pens_v1');if(bp)BRACKET_PENS=JSON.parse(bp)}catch(e){}
   try{const bs=localStorage.getItem('intercolleras_bracket_scores_v1');if(bs){BRACKET_SCORES=JSON.parse(bs); recomputeWinners();}}catch(e){}
+  normalizeBracketStruct();
 }
 function saveResults(){try{localStorage.setItem(LS_RESULTS,JSON.stringify(RESULTS))}catch(e){} pushFirebase();}
 function saveMvps(){try{localStorage.setItem(LS_MVPS,JSON.stringify(MVPS))}catch(e){} pushFirebase();}
@@ -1314,6 +1312,38 @@ function togglePens(level, i, checked){
   if(level==='final'){ BRACKET_PENS.final = !!checked; }
   else { BRACKET_PENS[level][i] = !!checked; }
   saveBracket(); renderAdmin();
+}
+
+// Asegura que las estructuras tengan la forma esperada (arrays con longitud fija),
+// incluso si Firebase devolvió objetos con claves numéricas o omitió posiciones null.
+function normalizeBracketStruct(){
+  const fixArr = (src, len, defVal) => {
+    const out = [];
+    for(let i=0;i<len;i++){
+      let v = (src && (src[i]!==undefined ? src[i] : src[String(i)]));
+      if(v===undefined) v = defVal;
+      out.push(v);
+    }
+    return out;
+  };
+  // BRACKET_RES
+  if(!BRACKET_RES || typeof BRACKET_RES !== 'object') BRACKET_RES = {};
+  BRACKET_RES.playoffs = fixArr(BRACKET_RES.playoffs, 4, null);
+  BRACKET_RES.qf = fixArr(BRACKET_RES.qf, 4, null);
+  BRACKET_RES.sf = fixArr(BRACKET_RES.sf, 2, null);
+  if(BRACKET_RES.final===undefined) BRACKET_RES.final = null;
+  // BRACKET_PENS
+  if(!BRACKET_PENS || typeof BRACKET_PENS !== 'object') BRACKET_PENS = {};
+  BRACKET_PENS.playoffs = fixArr(BRACKET_PENS.playoffs, 4, false);
+  BRACKET_PENS.qf = fixArr(BRACKET_PENS.qf, 4, false);
+  BRACKET_PENS.sf = fixArr(BRACKET_PENS.sf, 2, false);
+  if(BRACKET_PENS.final===undefined) BRACKET_PENS.final = false;
+  // BRACKET_SCORES
+  if(!BRACKET_SCORES || typeof BRACKET_SCORES !== 'object') BRACKET_SCORES = {};
+  BRACKET_SCORES.playoffs = fixArr(BRACKET_SCORES.playoffs, 4, null);
+  BRACKET_SCORES.qf = fixArr(BRACKET_SCORES.qf, 4, null);
+  BRACKET_SCORES.sf = fixArr(BRACKET_SCORES.sf, 2, null);
+  if(BRACKET_SCORES.final===undefined) BRACKET_SCORES.final = null;
 }
 
 // Devuelve {winner:'a'|'b'|null, byPens:bool} a partir de {a,b,penA,penB}
